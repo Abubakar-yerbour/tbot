@@ -29,23 +29,25 @@ zip_file_ids = [
 ]
 
 linux_video_ids = [
-    "BAACAgQAAxkBAAIBMWYjFS4tKYPflg6kTVptLQEZHbd4AAJXMgACg-FRUP6BpjHqAAG1wjYE",
-    "BAACAgQAAxkBAAIBM2YjFVZcMIfIjSK0zIvqnIPlsChdAAJYMgACg-FRUPmZ-FW8K4mNwjYE"
+    "BAACAgUAAxkBAAICQWf9fqJ7qtultqJRJDXBkuJC85A3AAI_FQAC0HDJVUTpNVOEOUu5NgQ",
+    "BAACAgUAAxkBAAICQmf9fqIn1-1RXVN0BcD4k5GFPwtPAAJAFQAC0HDJVbVvpsqUQ1YiNgQ",
+    "BAACAgUAAxkBAAICQ2f9fqJTScg9RhzzWYlNh00iOjgPAAJCFQAC0HDJVQ2MGxQLlo_KNgQ",
+    "BAACAgUAAxkBAAICRGf9fqLtzJrqNv4o4cxvHMRs0kLDAAKCFAACHyzYVVJyIiMSr48vNgQ",
+    "BAACAgUAAxkBAAICRWf9fqJplRxbf2cV9h8JQeKuNTakAAKIFAACHyzYVRVcyY5IUUtUNgQ"
 ]
 
 @bot.message_handler(commands=['start'])
 def start(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     markup.row(
-        types.KeyboardButton("💻 FULL HACKING COURSE"),
+        types.KeyboardButton("💻 FULL ETHC COURSE"),
+        types.KeyboardButton("💻 CODING")
     )
     markup.row(
         types.KeyboardButton("📱 VIRTUAL SMS"),
         types.KeyboardButton("🐧 LINUX BASICS")
     )
-    markup.row(
-        types.KeyboardButton("📞 CONTACT US")
-    )
+    markup.row(types.KeyboardButton("📞 CONTACT US"))
 
     welcome_text = (
         "👋 *Welcome to the Hacking Resource Bot!*\n\n"
@@ -53,16 +55,24 @@ def start(message):
     )
     bot.send_message(message.chat.id, welcome_text, reply_markup=markup, parse_mode='Markdown')
     print(f"[+] Bot started by user: {message.from_user.first_name} (@{message.from_user.username})")
-    print("[*] Course Teacher: Aleksa Tamburkovski")
+
+def show_coding_menu(chat_id):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    markup.row(types.KeyboardButton("🐍 Python"), types.KeyboardButton("🌐 HTML & CSS"))
+    markup.row(types.KeyboardButton("🔙 Back"))
+    bot.send_message(chat_id, "Select a coding topic:", reply_markup=markup)
 
 @bot.message_handler(func=lambda m: True)
 def handle_buttons(message):
-    if message.text == "💻 FULL HACKING COURSE":
+    if message.text == "💻 FULL ETHC COURSE":
         print("[*] Sending Full Hacking Course ZIPs...")
         bot.send_message(message.chat.id, "📦 Sending Full Hacking Course ZIPs...")
         for file_id in zip_file_ids:
-            bot.send_document(message.chat.id, file_id)
-        print("[+] Full Hacking Course sent.")
+            try:
+                bot.send_document(message.chat.id, file_id)
+                print(f"[*] Sent: {file_id}")
+            except Exception as e:
+                print(f"[!] Failed to send ZIP {file_id}: {e}")
 
     elif message.text == "📱 VIRTUAL SMS":
         print("[*] Sending Virtual SMS info...")
@@ -73,12 +83,29 @@ def handle_buttons(message):
         print("[*] Sending Linux Basics videos...")
         bot.send_message(message.chat.id, "🎥 Sending Linux Basics Videos...")
         for file_id in linux_video_ids:
-            bot.send_video(message.chat.id, file_id)
-        print("[+] Linux Basics videos sent.")
+            try:
+                bot.send_video(message.chat.id, file_id)
+                print(f"[*] Sent video: {file_id}")
+            except Exception as e:
+                print(f"[!] Failed to send video {file_id}: {e}")
 
     elif message.text == "📞 CONTACT US":
-        bot.send_message(message.chat.id, "📩 You can reach us at: @Cyb37h4ck37")
+        bot.send_message(message.chat.id, "📩 You can reach us at: @Cyb37h4ck37\n@Syevil011")
         print("[+] Contact info sent.")
+
+    elif message.text == "💻 CODING":
+        print("[*] Showing coding submenu...")
+        show_coding_menu(message.chat.id)
+
+    elif message.text == "🐍 Python":
+        bot.send_message(message.chat.id, "🐍 Python Files Coming soon...")
+
+
+    elif message.text == "🌐 HTML & CSS":
+        bot.send_message(message.chat.id, "📚 HTML & CSS resources coming soon!")
+
+    elif message.text == "🔙 Back":
+        start(message)
 
     else:
         bot.send_message(message.chat.id, "❌ Invalid option. Please select from the menu.")
