@@ -1,5 +1,4 @@
-import telebot
-from telebot import types
+import telebot                                    from telebot import types
                                                   bot_token = "7406063194:AAFcc3LpqIvhG-pii4lSKJobGPtxLcMJqu4"
 bot = telebot.TeleBot(bot_token)
                                                   zip_file_ids = [
